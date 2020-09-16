@@ -1,13 +1,7 @@
-from unittest import TestCase
 import pytest
-from P1 import calc_substrings
+from p1 import calc_substrings
 
-valid_strings = [
-  ("909", 6),
-  ("36", 3),
-  ("21008", 7)
-]
-
+valid_strings = [("909", 6), ("36", 3), ("21008", 7)]
 
 
 @pytest.mark.parametrize("test_input,expected", valid_strings)
