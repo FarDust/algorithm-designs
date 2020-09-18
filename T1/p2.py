@@ -8,10 +8,9 @@ from math import inf
 class Connection:
     """Class for keeping track of Connections info."""
 
-    def __init__(self, connections, cost, houses):
+    def __init__(self, connections, cost):
         self.connections = connections
         self.cost = cost
-        self.houses = houses
 
     def __lt__(self, value):
         return self.cost < value.cost
@@ -83,13 +82,11 @@ def create_graph(town_quantity, provider_cost, cable_unit_cost, house_qty):
             new_connection = Connection(
                 connections=(town_index, provider_index + town_quantity),
                 cost=estimated_cost * house_qty[town_index],
-                houses=house_qty[town_index],
             )
             connections.put(new_connection)
         extra_connection = Connection(
             connections=(provider_index + town_quantity, 2 * town_quantity),
             cost=0,
-            houses=house_qty[town_index],
         )
         connections.put(extra_connection)
     return connections
@@ -99,6 +96,7 @@ def calc_optimum_internet_provider(
     town_quantity, provider_cost, cable_unit_cost, house_qty
 ):
     optimum_internet_provider_cost = [inf] * (town_quantity)
+    optimum_internet_provider_cost[-1] = town_quantity*provider_cost
 
     connections = create_graph(
         town_quantity, provider_cost, cable_unit_cost, house_qty
@@ -125,14 +123,18 @@ def solve(
     banned=set(),
     viewed=set(),
 ):
-    if banned == all_options:
+    if len(banned) == 1:
         return
     if frozenset(banned) in viewed:
         return
     if banned == set():
         banned = all_options
+
+    banned_group = list()
     for option in banned:
         to_banned = banned - {option}
+        if frozenset(to_banned) in viewed:
+            continue
         mst, connections, final_sum = kruskal(
             connections,
             2 * town_quantity + 1,
@@ -153,19 +155,22 @@ def solve(
                     provider_cost if connection.cost == 0 else connection.cost
                 )
         test_index = town_quantity - len(to_banned) - 1
-        if (
-            final_sum
-            < optimum_internet_provider_cost[test_index]
-        ):
+        if final_sum < optimum_internet_provider_cost[test_index]:
             optimum_internet_provider_cost[test_index] = final_sum
+        else:
+            continue
+        print(final_solution, final_sum, to_banned)
         viewed.add(frozenset(banned))
+        banned_group.append((final_sum, set() | to_banned))
+    banned_group.sort()
+    for final_sum, group in banned_group:
         solve(
             all_options,
             town_quantity,
             provider_cost,
             connections,
             optimum_internet_provider_cost,
-            set() | to_banned,
+            group,
         )
 
 
