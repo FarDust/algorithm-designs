@@ -3,8 +3,9 @@ import cmath
 
 
 class Polynomial:
-    def __init__(self, polynomial):
+    def __init__(self, polynomial, rank=None):
         self.value = list(polynomial)
+        self.rank = rank if rank else len(self.value) - 1
 
     def __mul__(self, other):
         result = list()
@@ -17,19 +18,31 @@ class Polynomial:
             map(
                 lambda number: round_complex(number),
                 ifft(fft_prepare_input(result, next_potency2(len(result)))),
-            )
+            ),
+            rank=self.rank+other.rank
         )
 
     def __repr__(self):
         return " + ".join(
             map(
                 lambda i: f"{round_complex(self.value[i])}*X^{i}",
-                range(len(self.value)),
+                range(len(self)),
             )
         )
+    
+    def __len__(self):
+        return self.rank + 1
 
     def __str__(self):
         return repr(self)
+
+    def int_coef_str(self):
+        return " ".join(
+            map(
+                lambda i: f"{int(round_complex(self.value[i]))}",
+                range(len(self)),
+            )
+        )
 
 
 def next_potency2(number):
@@ -103,5 +116,9 @@ if __name__ == "__main__":
         polyA = Polynomial([2, 0, 1])
         polyB = Polynomial([2, 0, 1])
     else:
-        input_string = input()
-    print(polyA * polyB)
+        remap_int = lambda coefficient: int(coefficient)
+        polyA = Polynomial(map(remap_int, input().strip().split(" ")[1:]))
+        polyB = Polynomial(map(remap_int, input().strip().split(" ")[1:]))
+
+    result = polyA * polyB
+    print(f'{result.rank} {result.int_coef_str()}')
