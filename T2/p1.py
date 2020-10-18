@@ -19,7 +19,7 @@ class Polynomial:
                 lambda number: round_complex(number),
                 ifft(fft_prepare_input(result, next_potency2(len(result)))),
             ),
-            rank=self.rank+other.rank
+            rank=self.rank + other.rank,
         )
 
     def __repr__(self):
@@ -29,7 +29,7 @@ class Polynomial:
                 range(len(self)),
             )
         )
-    
+
     def __len__(self):
         return self.rank + 1
 
@@ -39,7 +39,7 @@ class Polynomial:
     def int_coef_str(self):
         return " ".join(
             map(
-                lambda i: f"{int(round_complex(self.value[i]))}",
+                lambda i: f"{int((self.value[i]))}",
                 range(len(self)),
             )
         )
@@ -65,7 +65,7 @@ def round_complex(number):
 def dft2(polynomial):
     assert len(polynomial) == 2
     base = [0, 0, 0, 1]
-    M = list(map(lambda x: cmath.exp(-1j * cmath.pi * x), base))
+    M = list(map(lambda x: (-1) ** (-x), base))  # cmath.exp(-1j * cmath.pi * x)
     result = [
         (M[0] * polynomial[0] + M[2] * polynomial[1]),
         (M[1] * polynomial[0] + M[3] * polynomial[1]),
@@ -81,7 +81,10 @@ def fft(polynomial):
     odd_poly = fft(polynomial[1::2])
     unit_roots = list(
         map(
-            lambda x: cmath.exp(-1j * cmath.pi * x / int(len(polynomial) / 2)),
+            lambda x: (-1)
+            ** (
+                -x / int(len(polynomial) / 2)
+            ),  # cmath.exp(-1j * cmath.pi * x / int(len(polynomial) / 2))
             range(len(polynomial)),
         )
     )
@@ -121,4 +124,4 @@ if __name__ == "__main__":
         polyB = Polynomial(map(remap_int, input().strip().split(" ")[1:]))
 
     result = polyA * polyB
-    print(f'{result.rank} {result.int_coef_str()}')
+    print(f"{result.rank} {result.int_coef_str()}")
