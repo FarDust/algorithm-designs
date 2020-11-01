@@ -1,5 +1,4 @@
 import math
-import cmath
 
 
 class Polynomial:
@@ -16,7 +15,7 @@ class Polynomial:
             result.append(pv_poly_1[unit_root] * pv_poly_2[unit_root])
         return Polynomial(
             map(
-                lambda number: round_complex(number),
+                lambda number: number,
                 ifft(fft_prepare_input(result, next_potency2(len(result)))),
             ),
             rank=self.rank + other.rank,
@@ -39,7 +38,7 @@ class Polynomial:
     def int_coef_str(self):
         return " ".join(
             map(
-                lambda i: f"{int((self.value[i]))}",
+                lambda i: f"{int(round_complex(self.value[i], target=0))}",
                 range(len(self)),
             )
         )
@@ -54,11 +53,13 @@ def fft_prepare_input(polynomial, padding):
     return polynomial.copy() + zero_padding
 
 
-def round_complex(number):
+def round_complex(number, target=14):
+    img_round = round(number.imag, target)
+    real_round = round(number.real, target)
     return (
-        round(number.real, 14)
-        if round(number.imag, 14) * 1j == 0j
-        else round(number.real, 14) + round(number.imag, 14) * 1j
+        real_round
+        if img_round * 1j == 0j
+        else real_round + img_round * 1j
     )  # Round base on pi max presition
 
 
@@ -116,8 +117,8 @@ if __name__ == "__main__":
     import sys
 
     if len(sys.argv) > 1 and sys.argv[1] == "-t":
-        polyA = Polynomial([2, 0, 1])
-        polyB = Polynomial([2, 0, 1])
+        polyA = Polynomial([-1, -4, 1, -10, 1, -2, 5, -5, -10])
+        polyB = Polynomial([-9, -3, -2, -9, 4, -9])
     else:
         remap_int = lambda coefficient: int(coefficient)
         polyA = Polynomial(map(remap_int, input().strip().split(" ")[1:]))
