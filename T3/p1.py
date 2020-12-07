@@ -1,6 +1,7 @@
 # The billboard problem
 # https://www.thehindu.com/children/the-billiard-ball-problem/article20314985.ece
 # https://en.wikipedia.org/wiki/Arithmetic_billiards
+# http://antonellaperucca.net/perucca-arithmetic-billiards.pdf
 
 from fractions import Fraction
 
@@ -171,8 +172,8 @@ if __name__ == "__main__":
 
     if len(argv) > 1 and argv[1] == "-t":
         start_n = 10
-        start_m = 10
-        ball = (10, -1)
+        start_m = 9
+        ball = (10, 0)
         direction = (-1, 0)
     else:
         start_n = int(input())
