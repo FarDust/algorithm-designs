@@ -1,4 +1,4 @@
-# The billboard problem
+# The Billiard Ball Problem
 
 ## References
   - https://www.thehindu.com/children/the-billiard-ball-problem/article20314985.ece
