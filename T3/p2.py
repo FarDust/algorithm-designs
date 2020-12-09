@@ -1137,9 +1137,9 @@ if __name__ == "__main__":
     else:
         n = int(numbers[1])
         m = int(numbers[2])
-        values = set()
+        result = 0
         for a in range(1, n+1):
             for b in range(1, m+1):
                 if gcd(a, b) == 1 and a <= n and b <= m:
-                    values.add((a, b))
-        print(len(values))
+                    result += 1
+        print(result)
