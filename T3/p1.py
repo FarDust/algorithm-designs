@@ -176,11 +176,12 @@ if __name__ == "__main__":
         ball = (10, 0)
         direction = (-1, 0)
     else:
-        start_n = int(input())
-        start_m = int(input())
+        numbers = input().strip().split(" ")
+        start_n = int(numbers[0])
+        start_m = int(numbers[1])
 
-        ball = (int(input()), int(input()))
-        direction = (int(input()), int(input()))
+        ball = (int(numbers[2]), int(numbers[3]))
+        direction = (int(numbers[4]), int(numbers[5]))
 
     new_fraction = Fraction(start_m, start_n)
 
@@ -197,6 +198,6 @@ if __name__ == "__main__":
 
     new_billboard = BillBoard(n, m, ball, direction)
     solution = new_billboard.shot()
-    print(f"{solution[0]} {solution[1]}") if isinstance(
+    print(f"{int(solution[0]/change)} {int(solution[1]/change)}") if isinstance(
         solution, tuple
     ) else print(solution)
