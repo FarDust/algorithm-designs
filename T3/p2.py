@@ -1008,7 +1008,6 @@ well_know_1000_primes = [
 
 
 class Moebius:
-
     def __init__(self, fermat_iters=5, primes=well_know_1000_primes):
         self.primes = [2, 3] if len(primes) <= 2 else primes
         self.is_prime_hash = set(self.primes)
@@ -1112,21 +1111,21 @@ class Moebius:
         try:
             if not (is_even_square):
                 if n == 1:
-                    #print(f"{n} is special", 1)
+                    # print(f"{n} is special", 1)
                     return 1
                 if self.is_prime(n):
-                    #print(f"{n} is prime", -1)
+                    # print(f"{n} is prime", -1)
                     return -1
                 factors = self.factorize_with_unique_primes(n)
                 if len(factors) % 2 == 0:
-                    #print(n, factors, 1)
+                    # print(n, factors, 1)
                     return 1
-                #print(n, factors, -1)
+                # print(n, factors, -1)
                 return -1
-            #print(f"{n} is even square F", 0)
+            # print(f"{n} is even square F", 0)
             return 0
         except ValueError as e:
-            #print(e)
+            # print(e)
             return 0
 
 
@@ -1136,4 +1135,11 @@ if __name__ == "__main__":
     if len(numbers) == 2:
         print(moebius_function(int(numbers[1])))
     else:
-        raise Exception("I know not wat you mean")
+        n = int(numbers[1])
+        m = int(numbers[2])
+        values = set()
+        for a in range(1, n+1):
+            for b in range(1, m+1):
+                if gcd(a, b) == 1 and a <= n and b <= m:
+                    values.add((a, b))
+        print(len(values))
