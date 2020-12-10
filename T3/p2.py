@@ -1007,15 +1007,17 @@ well_know_1000_primes = [
 ]
 
 
-class Moebius:
+class Mobius:
     def __init__(self, fermat_iters=5, primes=well_know_1000_primes):
         self.primes = [2, 3] if len(primes) <= 2 else primes
         self.is_prime_hash = set(self.primes)
         self.fermat_iters = fermat_iters
+        self.precalc_cache = dict()
 
     def add_prime(self, prime_number):
-        self.primes.append(prime_number)
-        self.is_prime_hash.add(prime_number)
+        if not(prime_number in self.primes):
+            self.primes.append(prime_number)
+            self.is_prime_hash.add(prime_number)
 
     # https://cp-algorithms.com/algebra/primality_tests.html
     def is_prime(self, n):
@@ -1071,8 +1073,6 @@ class Moebius:
                     f"{n} does not have unique prime decomposition"
                 )
             factors.add(n)
-        if 9 in factors:
-            help
         return factors
 
     # brent factorization: https://cp-algorithms.com/algebra/factorization.html
@@ -1108,38 +1108,58 @@ class Moebius:
 
     def __call__(self, n: int):
         is_even_square = self.prefetch_even_square(n)
+        if n in self.precalc_cache.keys():
+            return self.precalc_cache[n]
         try:
             if not (is_even_square):
                 if n == 1:
                     # print(f"{n} is special", 1)
+                    self.precalc_cache[n] = 1
                     return 1
                 if self.is_prime(n):
                     # print(f"{n} is prime", -1)
+                    self.precalc_cache[n] = -1
                     return -1
                 factors = self.factorize_with_unique_primes(n)
                 if len(factors) % 2 == 0:
                     # print(n, factors, 1)
+                    self.precalc_cache[n] = 1
                     return 1
                 # print(n, factors, -1)
+                self.precalc_cache[n] = -1
                 return -1
             # print(f"{n} is even square F", 0)
+            self.precalc_cache[n] = 0
             return 0
         except ValueError as e:
             # print(e)
+            self.precalc_cache[n] = 0
             return 0
 
 
 if __name__ == "__main__":
-    moebius_function = Moebius(fermat_iters=10, primes=[2, 3])
+    mobius_function = Mobius(fermat_iters=10, primes=[2, 3])
     numbers = input().strip().split()
     if len(numbers) == 2:
-        print(moebius_function(int(numbers[1])))
+        print(mobius_function(int(numbers[1])))
     else:
+        # https://www.geeksforgeeks.org/find-the-number-of-pairs-such-that-their-gcd-is-equals-to-1/
         n = int(numbers[1])
         m = int(numbers[2])
-        result = 0
-        for a in range(1, n+1):
-            for b in range(1, m+1):
-                if gcd(a, b) == 1 and a <= n and b <= m:
-                    result += 1
+    
+
+        result = 1
+        for a in range(1, max(n, m)+1):
+            if mobius_function(a) == 0:
+                continue
+            temp = 0
+            for b in range(a, max(n, m) + 1, a):
+                temp += 1
+    
+            result += temp * (temp - 1) * mobius_function(a)
+        for a in range(1, max(n, m) + 1):
+            for b in range(min(n, m) + 1, max(n, m) + 1):
+                if gcd(a, b) == 1:
+                    result -= 1
+            
         print(result)
