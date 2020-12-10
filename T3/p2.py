@@ -1138,8 +1138,12 @@ class Mobius:
 
 
 if __name__ == "__main__":
+    from sys import argv
+    if len(argv) > 1 and argv[1] == "-t":
+        numbers = "2 73787 73778".strip().split()
+    else:
+        numbers = input().strip().split()
     mobius_function = Mobius(fermat_iters=10, primes=[2, 3])
-    numbers = input().strip().split()
     if len(numbers) == 2:
         print(mobius_function(int(numbers[1])))
     else:
