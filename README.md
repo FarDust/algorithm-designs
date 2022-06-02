@@ -1,5 +1,7 @@
-# 2020-fardust
-Repositorio de tareas de Diseño y Análisis de Algoritmos 2020 de Gabriel Andrés Faúndez Soto .
+# Design and Analysis of Algorithms
+Repository of asignments of the cource design and analysis of algorithms 2020.
+
+> This repo it's a rewrite of the original repository of the course. With only my own code.
 
 ## Profile commands
 
